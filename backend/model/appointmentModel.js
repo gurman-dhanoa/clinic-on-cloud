@@ -9,6 +9,12 @@ const appointmentSchema = mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref:"User"
     },
+    doctorName:{
+        type: String,
+    },
+    userName:{
+        type: String,
+    },
     status:{
         // requested   fixed     completed
         type:String,

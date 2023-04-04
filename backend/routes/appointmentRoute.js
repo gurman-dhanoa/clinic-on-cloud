@@ -1,8 +1,9 @@
 const express = require("express");
-const { createAppointment} = require("../controller/appointmentController");
+const {  getAllAppointments} = require("../controller/appointmentController");
+
 
 const Router = express.Router();
 
-Router.route("/appointment/new/:id").post(createAppointment);
+Router.route("/appointments").get(getAllAppointments);   //get all the appointments -- Admin
 
 module.exports = Router;

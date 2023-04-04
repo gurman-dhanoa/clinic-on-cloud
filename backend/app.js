@@ -1,13 +1,16 @@
 const express = require("express");
 const ErrorHandler = require("./middleware/ErrorHandler");
+const CookieParser = require("cookie-parser");
 
 const app = express();
 app.use(express.json());
+app.use(CookieParser());
 
 // importing routes
 const doctorRoutes = require("./routes/doctorRoute");
 const userRoutes = require("./routes/userRoute");
 const appointmentRoute = require("./routes/appointmentRoute");
+const cookieParser = require("cookie-parser");
 
 app.use("/api/v1", doctorRoutes);
 app.use("/api/v1", userRoutes);
