@@ -15,14 +15,22 @@ const appointmentSchema = mongoose.Schema({
     userName:{
         type: String,
     },
+    comment:{
+        type: String,
+    },
     status:{
         // requested   fixed     completed
         type:String,
         required:[true,"Enter status of appointment"]
     },
-    prescription:[{
-        type:String
-    }],
+    prescription:{
+        public_id:{
+            type:String,
+        },
+        url:{
+            type:String,
+        },
+    },
     disease:[{
         type:String
     }],

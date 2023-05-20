@@ -46,7 +46,7 @@ const userSchema = mongoose.Schema({
         maxLength:[10,"Contact number can have max 10 character"],
         required:[true,"Please enter your contact number"]
     }],
-    images:[{
+    image:{
         public_id:{
             type:String,
             required:true
@@ -55,7 +55,7 @@ const userSchema = mongoose.Schema({
             type:String,
             required:true
         }
-    }],
+    },
     adharCard_number:{
         type:Number,
         required:[true,"Please enter your adhar card number"],

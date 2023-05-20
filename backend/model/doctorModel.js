@@ -15,6 +15,10 @@ const doctorSchema = mongoose.Schema({
         unique: true,
         validate: [validator.isEmail, "Please Enter a valid Email"],
     },
+    specialization:{
+        type: String,
+        required: [true, "Please Enter Your specialization"],
+    },
     password: {
         type: String,
         required: [true, "Please Enter Your Password"],
@@ -30,7 +34,7 @@ const doctorSchema = mongoose.Schema({
         required:[true,"Please enter your Gender"]
     },
     age:{
-        type:Number,
+        type:String,
         required:[true,"Please enter your age"]
     },
     experience:{
@@ -42,15 +46,15 @@ const doctorSchema = mongoose.Schema({
         required:[true,"Please enter location of your clinic"]
     },
     fees:{
-        type:Number,
+        type:String,
         required:[true,"Please enter your Appointment fees"]
     },
     contactNumber:[{
-        type:Number,
+        type:String,
         maxLength:[10,"Contact number can have max 10 character"],
         required:[true,"Please enter your contact number"]
     }],
-    images:[{
+    image:{
         public_id:{
             type:String,
             required:true
@@ -59,7 +63,7 @@ const doctorSchema = mongoose.Schema({
             type:String,
             required:true
         }
-    }],
+    },
     rating:{
         type:Number,
         default:0
@@ -76,7 +80,6 @@ const doctorSchema = mongoose.Schema({
     }],
     current_status:{
         type:Boolean,
-        required:[true,"Please enter your available status"]
     },
     adharCard_number:{
         type:Number,

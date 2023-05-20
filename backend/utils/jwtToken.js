@@ -18,8 +18,8 @@ exports.sendUserToken = (user, statusCode, res) => {
   });
 };
 
-exports.sendDocToken = (user, statusCode, res) => {
-  const token = user.getJWTToken();
+exports.sendDocToken = (doctor, statusCode, res) => {
+  const token = doctor.getJWTToken();
 
   // options for cookie
   const options = {
@@ -31,7 +31,7 @@ exports.sendDocToken = (user, statusCode, res) => {
 
   res.status(statusCode).cookie("docToken", token, options).json({
     success: true,
-    user,
+    doctor,
     token,
   });
 };

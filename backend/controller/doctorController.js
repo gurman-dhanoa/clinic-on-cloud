@@ -2,6 +2,7 @@ const Doctor = require("../model/doctorModel");
 const ErrorHandler = require("../utils/ErrorHandler");
 const catchAsyncError = require("../middleware/catchAsyncError");
 const {sendDocToken} = require("../utils/jwtToken");
+const cloudinary = require("cloudinary");
 
 // Get all doctors
 exports.getAllDoctors = catchAsyncError(async (req, res,next) => {
@@ -53,7 +54,36 @@ exports.logout = catchAsyncError(async (req, res, next) => {
 
 // Create new doctor
 exports.createNewDoctor = catchAsyncError(async (req, res,next) => {
-  const newDoctor = await Doctor.create(req.body);
+  const {name,
+    email,
+    password,
+    gender,
+    age,
+    specialization,
+    qualification,
+    experience,
+    fees,
+    location,
+    contactNumber,
+    adharCard_number,} = req.body;
+    const myCloud = await cloudinary.v2.uploader.upload(req.body.images, {
+      folder: "images",
+      width: 150,
+      crop: "scale",
+    });
+  const newDoctor = await Doctor.create({name,
+    email,
+    password,
+    gender,
+    age,
+    specialization,
+    qualification,
+    experience,
+    fees,
+    location,
+    contactNumber,
+    adharCard_number,
+    image: { public_id: myCloud.public_id, url: myCloud.secure_url },});
   sendDocToken(newDoctor, 201, res);
 });
 

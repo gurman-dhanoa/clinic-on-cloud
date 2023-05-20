@@ -1,12 +1,42 @@
 const User = require("../model/userModel");
 const ErrorHandler = require("../utils/ErrorHandler");
 const catchAsyncError = require("../middleware/catchAsyncError");
-const {sendUserToken} = require("../utils/jwtToken");
+const { sendUserToken } = require("../utils/jwtToken");
+const cloudinary = require("cloudinary");
 
 // Create new user
-exports.createUser = catchAsyncError(async (req,res,next) => {
-    const user = await User.create(req.body);
-    sendUserToken(user, 201, res);
+exports.createUser = catchAsyncError(async (req, res, next) => {
+  const {
+    name,
+    email,
+    password,
+    gender,
+    age,
+    weight,
+    height,
+    location,
+    contactNumber,
+    adharCard_number,
+  } = req.body;
+  const myCloud = await cloudinary.v2.uploader.upload(req.body.images, {
+    folder: "images",
+    width: 150,
+    crop: "scale",
+  });
+  const user = await User.create({
+    name,
+    email,
+    password,
+    gender,
+    age,
+    weight,
+    height,
+    location,
+    contactNumber,
+    adharCard_number,
+    image: { public_id: myCloud.public_id, url: myCloud.secure_url },
+  });
+  sendUserToken(user, 201, res);
 });
 
 // Login User
@@ -48,75 +78,75 @@ exports.logout = catchAsyncError(async (req, res, next) => {
 });
 
 // get All users
-exports.getAllUser = catchAsyncError(async (req,res,next) => {
-    const users = await User.find();
-    res.status(200).json({
-        success: true,
-        "Total users": users.length,
-        users,
-    });
+exports.getAllUser = catchAsyncError(async (req, res, next) => {
+  const users = await User.find();
+  res.status(200).json({
+    success: true,
+    "Total users": users.length,
+    users,
+  });
 });
 
 // Update user profile
-exports.updateUserProfile = catchAsyncError(async (req, res,next) => {
-    let user = await User.findById(req.user);
-    
-    if (!user) {
-      return next(new ErrorHandler("User not found",404));
-    }
-  
-    const newUser = await User.findByIdAndUpdate(req.user,req.body,{
-      new: true,
-      runValidators: true,
-      useFindAndModify: false,
-    });
-  
-    res.status(200).json({
-      success: "true",
-      newUser
-    })
-  });
-  
-  // Delete User
-  exports.deleteUser = catchAsyncError(async(req,res,next) => {
-    let user = await User.findById(req.user);
-    
-    if (!user) {
-      return next(new ErrorHandler("User not found",404));
-    }
-  
-    await user.remove();
-  
-    res.status(200).json({
-      success:"true",
-      message:"User deleted successfully"
-    })
-  });
-  
-  // get User details
-  exports.getUserDetails = catchAsyncError(async(req,res,next) => {
-    let user = await User.findById(req.user);
-    
-    if (!user) {
-      return next(new ErrorHandler("User not found",404));
-    }
-  
-    res.status(200).json({
-      success:"true",
-      user
-    })
+exports.updateUserProfile = catchAsyncError(async (req, res, next) => {
+  let user = await User.findById(req.user);
+
+  if (!user) {
+    return next(new ErrorHandler("User not found", 404));
+  }
+
+  const newUser = await User.findByIdAndUpdate(req.user, req.body, {
+    new: true,
+    runValidators: true,
+    useFindAndModify: false,
   });
 
-  // get User details
-  exports.getUserDetailsForDoctor = catchAsyncError(async(req,res,next) => {
-    let user = await User.findById(req.params.id);
-    
-    if (!user) {
-      return next(new ErrorHandler("User not found",404));
-    }
-  
-    res.status(200).json({
-      success:"true",
-      user
-    })
+  res.status(200).json({
+    success: "true",
+    newUser,
   });
+});
+
+// Delete User
+exports.deleteUser = catchAsyncError(async (req, res, next) => {
+  let user = await User.findById(req.user);
+
+  if (!user) {
+    return next(new ErrorHandler("User not found", 404));
+  }
+
+  await user.remove();
+
+  res.status(200).json({
+    success: "true",
+    message: "User deleted successfully",
+  });
+});
+
+// get User details
+exports.getUserDetails = catchAsyncError(async (req, res, next) => {
+  let user = await User.findById(req.user);
+
+  if (!user) {
+    return next(new ErrorHandler("User not found", 404));
+  }
+
+  res.status(200).json({
+    success: "true",
+    user,
+  });
+});
+
+// get User details
+exports.getUserDetailsForDoctor = catchAsyncError(async (req, res, next) => {
+  let user = await User.findById(req.params.id);
+
+  if (!user) {
+    return next(new ErrorHandler("User not found", 404));
+  }
+
+  res.status(200).json({
+    success: "true",
+    user,
+  });
+});

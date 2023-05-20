@@ -1,8 +1,10 @@
 const express = require("express");
 const ErrorHandler = require("./middleware/ErrorHandler");
 const CookieParser = require("cookie-parser");
+const fileupload = require('express-fileupload'); 
 
 const app = express();
+app.use(fileupload({useTempFiles: true}))
 app.use(express.json());
 app.use(CookieParser());
 
